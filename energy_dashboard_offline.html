@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Terminal - 能源行业全景</title>
+<style>
+:root {
+  --bg-0: #0a0a0b;
+  --bg-1: #16161c;
+  --bg-2: #1f1f28;
+  --border: #2a2a35;
+  --text-0: #f5f5f7;
+  --text-1: #b8b8c4;
+  --text-2: #6b6b7a;
+  --amber: #ffb800;
+  --cyan: #00d4ff;
+  --red: #ff3b5c;
+  --green: #00ff88;
+  --purple: #b66dff;
+  --orange: #ff8a3d;
+  --pink: #ff00aa;
+  --lime: #7eff5a;
+  --brown: #a08570;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg-0);
+  color: var(--text-0);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(255, 184, 0, 0.04), transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(0, 212, 255, 0.04), transparent 50%);
+}
+
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10,10,11,0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+}
+.brand-row {
+  display: flex; align-items: center;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.brand {
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--amber);
+  font-size: 18px;
+}
+.brand-sub {
+  color: var(--text-2);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  margin-left: 8px;
+}
+.nav {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+.nav-tab {
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.nav-tab:hover { color: var(--text-0); }
+.nav-tab.active {
+  color: var(--amber);
+  border-color: var(--amber);
+  background: rgba(255, 184, 0, 0.1);
+}
+.nav-info {
+  font-size: 11px;
+  color: var(--text-2);
+  text-align: right;
+}
+.live-dot {
+  display: inline-block; width: 6px; height: 6px;
+  background: var(--green); border-radius: 50%;
+  margin-right: 4px;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 50% { opacity: 0.3; } }
+
+.page { display: none; padding: 24px; }
+.page.active { display: block; }
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.page-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.page-title .accent { color: var(--amber); }
+.page-subtitle {
+  color: var(--text-2);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.page-meta {
+  font-size: 11px;
+  color: var(--text-2);
+  text-align: right;
+  letter-spacing: 0.1em;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.metric {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  padding: 16px;
+  position: relative;
+}
+.metric-label {
+  font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.metric-value {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.metric-sub {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 6px;
+}
+.metric.amber .metric-value { color: var(--amber); }
+.metric.cyan .metric-value { color: var(--cyan); }
+.metric.green .metric-value { color: var(--green); }
+.metric.red .metric-value { color: var(--red); }
+.metric.purple .metric-value { color: var(--purple); }
+
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-1);
+  font-weight: 600;
+}
+.badge {
+  color: var(--amber);
+  font-size: 9px;
+  padding: 2px 8px;
+  border: 1px solid var(--amber);
+  background: rgba(255, 184, 0, 0.1);
+  letter-spacing: 0.1em;
+}
+.card-body { padding: 16px; }
+
+.two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (max-width: 900px) {
+  .two-col, .three-col, .four-col { grid-template-columns: 1fr; }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  padding: 10px 12px;
+  color: var(--text-2);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg-1);
+  position: sticky; top: 0;
+  font-weight: 600;
+}
+th:hover { color: var(--amber); }
+th.sorted { color: var(--amber); }
+th.sorted::after { content: ' ▼'; font-size: 9px; }
+th.sorted.asc::after { content: ' ▲'; }
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody tr { cursor: pointer; transition: background 0.1s; }
+tbody tr:hover { background: var(--bg-2); }
+.sym { color: var(--amber); font-weight: 700; }
+.right { text-align: right; }
+.up { color: var(--green); }
+.down { color: var(--red); }
+.neutral { color: var(--text-1); }
+
+.table-scroll {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.filter-input {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  color: var(--text-0);
+  padding: 8px 12px;
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+  min-width: 240px;
+}
+.filter-input:focus { border-color: var(--amber); }
+.chip {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-1);
+  color: var(--text-1);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.chip:hover { border-color: var(--text-1); }
+.chip.active {
+  background: var(--amber);
+  color: var(--bg-0);
+  border-color: var(--amber);
+}
+.filter-label {
+  font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-right: 4px;
+  margin-left: 8px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 90px;
+  gap: 12px;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13px;
+  cursor: pointer;
+}
+.bar-row:hover { background: var(--bg-2); }
+.bar-track {
+  height: 18px;
+  background: var(--bg-2);
+  position: relative;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber), var(--cyan));
+}
+.bar-fill.green { background: linear-gradient(90deg, var(--green), #00aa55); }
+.bar-fill.red { background: linear-gradient(90deg, var(--red), #aa1f3a); }
+.bar-fill.cyan { background: linear-gradient(90deg, var(--cyan), var(--purple)); }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.detail-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  padding: 16px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.detail-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--amber);
+}
+.sym-big {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--amber);
+  letter-spacing: -0.02em;
+}
+.name-line {
+  color: var(--text-1);
+  font-size: 12px;
+  margin-top: 4px;
+  min-height: 32px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.sector-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 10px;
+  margin-top: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.price-big {
+  font-size: 22px;
+  font-weight: 800;
+  margin-top: 12px;
+  letter-spacing: -0.02em;
+}
+.row-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+.stat-lbl {
+  font-size: 9px;
+  color: var(--text-2);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.stat-val { font-size: 13px; margin-top: 2px; }
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--bg-1);
+  border: 1px solid var(--amber);
+  max-width: 580px;
+  width: 100%;
+  padding: 24px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.modal-close:hover { border-color: var(--amber); color: var(--amber); }
+
+.legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 11px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-swatch { width: 12px; height: 12px; }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 20px;
+}
+.page-btn {
+  padding: 6px 12px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+}
+.page-btn:hover { border-color: var(--amber); color: var(--amber); }
+.page-btn.active { background: var(--amber); color: var(--bg-0); border-color: var(--amber); }
+.page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-1); }
+::-webkit-scrollbar-thumb { background: #3a3a45; }
+::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+
+.treemap-svg rect { stroke: var(--bg-0); stroke-width: 1; cursor: pointer; transition: opacity 0.15s; }
+.treemap-svg rect:hover { opacity: 0.8; }
+.treemap-svg text { fill: var(--bg-0); pointer-events: none; font-weight: 700; }
+
+.bar-chart { width: 100%; height: auto; }
+.bar-chart rect { transition: opacity 0.15s; cursor: pointer; }
+.bar-chart rect:hover { opacity: 0.7; }
+.bar-chart text { fill: var(--text-1); font-size: 10px; }
+.axis-line { stroke: var(--border); }
+.grid-line { stroke: var(--bg-2); stroke-dasharray: 2,2; }
+
+.scatter-chart circle { transition: r 0.15s; cursor: pointer; }
+.scatter-chart circle:hover { stroke: var(--text-0); stroke-width: 2; }
+
+.donut-svg path { transition: opacity 0.15s; cursor: pointer; }
+.donut-svg path:hover { opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand-row">
+    <div>
+      <span class="brand">ENERGY.TERM</span>
+      <span class="brand-sub">286 INSTRUMENTS</span>
+    </div>
+    <div class="nav">
+      <button class="nav-tab active" data-page="overview">01 Overview</button>
+      <button class="nav-tab" data-page="screener">02 Screener</button>
+      <button class="nav-tab" data-page="charts">03 Charts</button>
+      <button class="nav-tab" data-page="sectors">04 Sectors</button>
+      <button class="nav-tab" data-page="rankings">05 Rankings</button>
+      <button class="nav-tab" data-page="detail">06 Cards</button>
+    </div>
+    <div class="nav-info">
+      <div><span class="live-dot"></span>LIVE</div>
+      <div id="clock"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 1: OVERVIEW -->
+<section class="page active" id="page-overview">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Sector <span class="accent">Overview</span></div>
+      <div class="page-subtitle">286 instruments • 8 sub-sectors</div>
+    </div>
+    <div class="page-meta">
+      <div>ENERGY UNIVERSE</div>
+      <div id="overview-date"></div>
+    </div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric amber">
+      <div class="metric-label">Total Market Cap</div>
+      <div class="metric-value" id="m-total">—</div>
+      <div class="metric-sub">Aggregate across 286 names</div>
+    </div>
+    <div class="metric cyan">
+      <div class="metric-label">Median Price</div>
+      <div class="metric-value" id="m-median">—</div>
+      <div class="metric-sub">50th percentile</div>
+    </div>
+    <div class="metric green">
+      <div class="metric-label">Gainers</div>
+      <div class="metric-value" id="m-up">—</div>
+      <div class="metric-sub">Up today</div>
+    </div>
+    <div class="metric red">
+      <div class="metric-label">Decliners</div>
+      <div class="metric-value" id="m-down">—</div>
+      <div class="metric-sub">Down today</div>
+    </div>
+    <div class="metric purple">
+      <div class="metric-label">Avg Day Change</div>
+      <div class="metric-value" id="m-avg">—</div>
+      <div class="metric-sub">Mean intraday move</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <span>▣ Market Cap Treemap (Top 60)</span>
+        <span class="badge">Click to inspect</span>
+      </div>
+      <div class="card-body">
+        <div class="legend-row" id="treemap-legend"></div>
+        <div id="treemap-container"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>▲ Top Gainers</span><span class="badge">Top 15</span></div>
+      <div class="card-body" id="top-gainers"></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top: 16px;">
+    <div class="card">
+      <div class="card-header"><span>▼ Top Decliners</span><span class="badge">Top 15</span></div>
+      <div class="card-body" id="top-losers"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>★ Largest by Market Cap</span><span class="badge">Top 10</span></div>
+      <div class="card-body" id="top-mcap"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 2: SCREENER -->
+<section class="page" id="page-screener">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Stock <span class="accent">Screener</span></div>
+      <div class="page-subtitle">Search • Filter • Sort across 286 names</div>
+    </div>
+    <div class="page-meta">
+      Showing <span id="screener-count" style="color: var(--amber);">286</span> / 286
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" class="filter-input" id="search-input" placeholder="🔍 Search by symbol or company name...">
+  </div>
+  <div class="filter-bar">
+    <span class="filter-label">Sector</span>
+    <button class="chip active" data-sector="all">All</button>
+    <button class="chip" data-sector="integrated">Integrated</button>
+    <button class="chip" data-sector="oil-gas">E&amp;P</button>
+    <button class="chip" data-sector="midstream">Midstream</button>
+    <button class="chip" data-sector="refining">Refining</button>
+    <button class="chip" data-sector="services">Services</button>
+    <button class="chip" data-sector="shipping">Shipping</button>
+    <button class="chip" data-sector="clean">Clean/Uranium</button>
+    <button class="chip" data-sector="coal">Coal</button>
+  </div>
+  <div class="filter-bar">
+    <span class="filter-label">Change</span>
+    <button class="chip active" data-change="all">All</button>
+    <button class="chip" data-change="up">▲ Gainers</button>
+    <button class="chip" data-change="down">▼ Losers</button>
+    <button class="chip" data-change="big-up">▲▲ &gt;5%</button>
+    <button class="chip" data-change="big-down">▼▼ &lt;-5%</button>
+    <span class="filter-label">Cap</span>
+    <button class="chip active" data-cap="all">All</button>
+    <button class="chip" data-cap="mega">Mega &gt;$100B</button>
+    <button class="chip" data-cap="large">Large $10-100B</button>
+    <button class="chip" data-cap="mid">Mid $1-10B</button>
+    <button class="chip" data-cap="small">Small &lt;$1B</button>
+  </div>
+
+  <div class="card">
+    <div class="table-scroll">
+      <table id="stock-table">
+        <thead>
+          <tr>
+            <th data-sort="symbol">Symbol</th>
+            <th data-sort="name">Company</th>
+            <th data-sort="sector">Sector</th>
+            <th class="right" data-sort="price">Price</th>
+            <th class="right sorted" data-sort="change">Change %</th>
+            <th class="right" data-sort="mcap">Market Cap</th>
+          </tr>
+        </thead>
+        <tbody id="stock-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 3: CHARTS -->
+<section class="page" id="page-charts">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Price <span class="accent">Charts</span></div>
+      <div class="page-subtitle">Cross-sectional visualization • 286 names</div>
+    </div>
+    <div class="page-meta">4 chart modules</div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header"><span>▣ Market Cap (Top 30)</span><span class="badge">USD</span></div>
+      <div class="card-body"><div id="chart-mcap"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>◈ Change % Distribution</span><span class="badge">All 286</span></div>
+      <div class="card-body"><div id="chart-changedist"></div></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top: 16px;">
+    <div class="card">
+      <div class="card-header"><span>◇ Price vs Mcap (Log-Log)</span><span class="badge">All 286</span></div>
+      <div class="card-body"><div id="chart-scatter"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>● Price Distribution</span><span class="badge">Buckets</span></div>
+      <div class="card-body"><div id="chart-pricedist"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 4: SECTORS -->
+<section class="page" id="page-sectors">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Sector <span class="accent">Breakdown</span></div>
+      <div class="page-subtitle">8 sub-industries • Aggregated metrics</div>
+    </div>
+    <div class="page-meta">Energy composite</div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header"><span>◬ Market Cap Allocation</span><span class="badge">%</span></div>
+      <div class="card-body" id="donut-container"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>▶ Sector Performance</span><span class="badge">Avg %</span></div>
+      <div class="card-body" id="sector-bars"></div>
+    </div>
+  </div>
+
+  <div id="sector-cards" class="four-col" style="margin-top: 16px;"></div>
+</section>
+
+<!-- PAGE 5: RANKINGS -->
+<section class="page" id="page-rankings">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Top <span class="accent">Rankings</span></div>
+      <div class="page-subtitle">League tables • Best & worst across dimensions</div>
+    </div>
+    <div class="page-meta">4 leaderboards • Top 20 each</div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header"><span>★ Largest by Market Cap</span><span class="badge">Top 20</span></div>
+      <div class="card-body" id="rank-mcap"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>▲ Biggest Gainers Today</span><span class="badge">Top 20</span></div>
+      <div class="card-body" id="rank-gainers"></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top: 16px;">
+    <div class="card">
+      <div class="card-header"><span>▼ Biggest Losers Today</span><span class="badge">Top 20</span></div>
+      <div class="card-body" id="rank-losers"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>$ Highest Priced</span><span class="badge">Top 20</span></div>
+      <div class="card-body" id="rank-price"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 6: CARDS -->
+<section class="page" id="page-detail">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Stock <span class="accent">Cards</span></div>
+      <div class="page-subtitle">Individual cards • Click for profile</div>
+    </div>
+    <div class="page-meta">
+      Showing <span id="card-count" style="color: var(--amber);">50</span> / <span id="card-total">286</span>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Sort</span>
+    <button class="chip active" data-detsort="mcap">Market Cap</button>
+    <button class="chip" data-detsort="price">Price</button>
+    <button class="chip" data-detsort="change">Change %</button>
+    <button class="chip" data-detsort="symbol">Symbol</button>
+  </div>
+  <div class="filter-bar">
+    <span class="filter-label">Sector</span>
+    <button class="chip active" data-detsector="all">All</button>
+    <button class="chip" data-detsector="integrated">Integrated</button>
+    <button class="chip" data-detsector="oil-gas">E&amp;P</button>
+    <button class="chip" data-detsector="midstream">Midstream</button>
+    <button class="chip" data-detsector="refining">Refining</button>
+    <button class="chip" data-detsector="services">Services</button>
+    <button class="chip" data-detsector="shipping">Shipping</button>
+    <button class="chip" data-detsector="clean">Clean</button>
+    <button class="chip" data-detsector="coal">Coal</button>
+  </div>
+
+  <div class="detail-grid" id="detail-grid"></div>
+  <div class="pagination" id="detail-pagination"></div>
+</section>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<script>
+const STOCKS = [{"symbol":"MTZ","name":"Mastec","price":380.98,"change":-2.0,"mcap":30150,"sector":"services"},{"symbol":"XOM","name":"Exxon Mobil","price":155.17,"change":-0.08,"mcap":643250,"sector":"integrated"},{"symbol":"CAT","name":"Caterpillar","price":884.77,"change":2.17,"mcap":407450,"sector":"services"},{"symbol":"CVX","name":"Chevron","price":191.96,"change":-0.5,"mcap":381880,"sector":"integrated"},{"symbol":"SHEL","name":"Shell","price":85.87,"change":-0.33,"mcap":240030,"sector":"integrated"},{"symbol":"COP","name":"ConocoPhillips","price":120.96,"change":-0.34,"mcap":147290,"sector":"integrated"},{"symbol":"CSUAY","name":"China Shenhua Energy","price":22.24,"change":-0.64,"mcap":139670,"sector":"oil-gas"},{"symbol":"ENB","name":"Enbridge","price":58.17,"change":-0.66,"mcap":126950,"sector":"midstream"},{"symbol":"PBR","name":"Petrobras","price":19.93,"change":-0.52,"mcap":123150,"sector":"integrated"},{"symbol":"PBR.A","name":"Petrobras","price":17.72,"change":-1.45,"mcap":121750,"sector":"integrated"},{"symbol":"BP","name":"British Petroleum","price":44.41,"change":-1.04,"mcap":117880,"sector":"integrated"},{"symbol":"EQNR","name":"Equinor","price":38.89,"change":0.56,"mcap":101920,"sector":"integrated"},{"symbol":"CNQ","name":"Canadian Natural Resource","price":48.74,"change":0.1,"mcap":101720,"sector":"integrated"},{"symbol":"MITSY","name":"MITSUI & CO LTD ADR","price":701.67,"change":-1.6,"mcap":100530,"sector":"oil-gas"},{"symbol":"ITOCY","name":"Itochu","price":12.2,"change":-0.57,"mcap":96750,"sector":"oil-gas"},{"symbol":"WMB","name":"Williams Cos.","price":78.56,"change":1.34,"mcap":96040,"sector":"midstream"},{"symbol":"GLNCY","name":"Glencore","price":15.25,"change":-1.39,"mcap":89010,"sector":"oil-gas"},{"symbol":"SLB","name":"SLB Limited","price":57.71,"change":0.8,"mcap":86350,"sector":"services"},{"symbol":"EPD","name":"Enterprise Products","price":39.61,"change":-0.35,"mcap":85660,"sector":"midstream"},{"symbol":"SU","name":"Suncor","price":67.68,"change":-0.07,"mcap":80410,"sector":"integrated"},{"symbol":"EOG","name":"EOG Resources","price":141.47,"change":1.06,"mcap":75400,"sector":"oil-gas"},{"symbol":"KMI","name":"Kinder Morgan","price":33.73,"change":0.67,"mcap":75100,"sector":"midstream"},{"symbol":"MPC","name":"Marathon Petroleum","price":255.8,"change":2.97,"mcap":74630,"sector":"refining"},{"symbol":"TRP","name":"TC Energy","price":70.87,"change":-0.44,"mcap":73740,"sector":"midstream"},{"symbol":"VLO","name":"Valero","price":246.71,"change":2.33,"mcap":73240,"sector":"refining"},{"symbol":"PSX","name":"Phillips 66","price":177.9,"change":2.21,"mcap":71250,"sector":"refining"},{"symbol":"ET","name":"Energy Transfer","price":20.09,"change":-0.38,"mcap":69060,"sector":"midstream"},{"symbol":"BKR","name":"Baker Hughes Company","price":65.96,"change":-0.24,"mcap":65550,"sector":"services"},{"symbol":"IMO","name":"Imperial Oil","price":133.56,"change":-0.24,"mcap":64410,"sector":"integrated"},{"symbol":"TRGP","name":"Targa Resources","price":276.35,"change":2.26,"mcap":59290,"sector":"midstream"},{"symbol":"OKE","name":"Oneok","price":93.94,"change":1.43,"mcap":59170,"sector":"midstream"},{"symbol":"OXY","name":"Occidental Petroleum","price":59.02,"change":0.31,"mcap":58700,"sector":"integrated"},{"symbol":"MPLX","name":"MPLX","price":56.5,"change":1.58,"mcap":57390,"sector":"midstream"},{"symbol":"CVE","name":"Cenovus Energy","price":30.07,"change":-0.78,"mcap":56700,"sector":"oil-gas"},{"symbol":"FANG","name":"Diamondback Energy","price":200.52,"change":-0.22,"mcap":56500,"sector":"oil-gas"},{"symbol":"DVN","name":"Devon Energy","price":47.26,"change":0.31,"mcap":54490,"sector":"oil-gas"},{"symbol":"LNG","name":"Cheniere Energy Inc","price":240.08,"change":-0.16,"mcap":50440,"sector":"integrated"},{"symbol":"CCJ","name":"Cameco","price":104.8,"change":-0.5,"mcap":45590,"sector":"clean"},{"symbol":"WDS","name":"Woodside Energy Group","price":22.68,"change":0.51,"mcap":43410,"sector":"integrated"},{"symbol":"EQT","name":"EQT","price":58.03,"change":0.5,"mcap":36290,"sector":"oil-gas"},{"symbol":"HAL","name":"Halliburton","price":41.56,"change":-0.97,"mcap":34750,"sector":"services"},{"symbol":"VG","name":"Venture Global","price":13.92,"change":2.62,"mcap":34530,"sector":"oil-gas"},{"symbol":"TS","name":"Tenaris","price":61.57,"change":-0.32,"mcap":33030,"sector":"oil-gas"},{"symbol":"CQP","name":"Cheniere Energy","price":63.5,"change":-1.87,"mcap":30740,"sector":"integrated"},{"symbol":"PBA","name":"Pembina","price":49.75,"change":-0.87,"mcap":28950,"sector":"midstream"},{"symbol":"TDY","name":"Teledyne Technologies","price":621.38,"change":2.35,"mcap":28740,"sector":"services"},{"symbol":"EC","name":"Ecopetrol","price":13.83,"change":-0.22,"mcap":28570,"sector":"integrated"},{"symbol":"FTI","name":"TechnipFMC","price":71.15,"change":-0.36,"mcap":28380,"sector":"services"},{"symbol":"TPL","name":"Texas Pacific Land","price":403.99,"change":1.77,"mcap":27820,"sector":"oil-gas"},{"symbol":"YZCAY","name":"YANKUANG ENERGY GROUP CO LTD.","price":17.2,"change":-1.74,"mcap":24550,"sector":"oil-gas"},{"symbol":"OMVKY","name":"OMV","price":16.41,"change":-0.8,"mcap":24100,"sector":"oil-gas"},{"symbol":"EXE","name":"Expand Energy Corp","price":98.02,"change":0.44,"mcap":23440,"sector":"oil-gas"},{"symbol":"L","name":"Loews","price":109.5,"change":0.29,"mcap":22530,"sector":"oil-gas"},{"symbol":"YPF","name":"YPF","price":48.01,"change":0.14,"mcap":20030,"sector":"integrated"},{"symbol":"PAGP","name":"Plains GP","price":26.03,"change":2.02,"mcap":19840,"sector":"midstream"},{"symbol":"PEXNY","name":"PTT Exploration and Production","price":9.2,"change":9.39,"mcap":18310,"sector":"oil-gas"},{"symbol":"WES","name":"Western Midstream Partners","price":46.2,"change":2.03,"mcap":18250,"sector":"midstream"},{"symbol":"ITT","name":"ITT","price":195.24,"change":1.33,"mcap":17460,"sector":"services"},{"symbol":"PR","name":"Permian Resources","price":20.46,"change":0.22,"mcap":17140,"sector":"oil-gas"},{"symbol":"PAA","name":"Plains All American Pipeline","price":24.18,"change":2.09,"mcap":17060,"sector":"midstream"},{"symbol":"GLPEY","name":"Galp Energia","price":11.28,"change":-2.76,"mcap":16610,"sector":"oil-gas"},{"symbol":"OVV","name":"Ovintiv","price":59.0,"change":0.21,"mcap":16580,"sector":"oil-gas"},{"symbol":"DTM","name":"DT Midstream","price":151.5,"change":1.52,"mcap":15450,"sector":"midstream"},{"symbol":"SUN","name":"Sunoco","price":70.15,"change":-0.25,"mcap":14350,"sector":"midstream"},{"symbol":"KPELY","name":"Keppel Corporation Limited","price":15.68,"change":-3.8,"mcap":14210,"sector":"oil-gas"},{"symbol":"APA","name":"APA Corporation","price":38.9,"change":1.45,"mcap":13760,"sector":"oil-gas"},{"symbol":"DINO","name":"HF Sinclair","price":69.79,"change":2.05,"mcap":12580,"sector":"refining"},{"symbol":"AR","name":"Antero Resources","price":36.98,"change":-0.16,"mcap":11450,"sector":"oil-gas"},{"symbol":"AM","name":"Antero Midstream","price":22.15,"change":1.55,"mcap":10560,"sector":"midstream"},{"symbol":"SUBCY","name":"Subsea 7","price":33.49,"change":-2.53,"mcap":10030,"sector":"oil-gas"},{"symbol":"RRC","name":"Range Resources","price":41.24,"change":0.24,"mcap":9700,"sector":"oil-gas"},{"symbol":"SSL","name":"Sasol","price":13.37,"change":0.72,"mcap":8830,"sector":"integrated"},{"symbol":"KNTK","name":"Kinetik Holdings","price":50.39,"change":-0.5,"mcap":8410,"sector":"oil-gas"},{"symbol":"HESM","name":"Hess Midstream","price":40.66,"change":2.19,"mcap":8390,"sector":"midstream"},{"symbol":"NE","name":"Noble","price":52.15,"change":-0.36,"mcap":8350,"sector":"services"},{"symbol":"FRO","name":"Frontline","price":37.13,"change":-3.42,"mcap":8240,"sector":"shipping"},{"symbol":"SM","name":"SM Energy","price":33.89,"change":1.92,"mcap":8140,"sector":"oil-gas"},{"symbol":"CHRD","name":"Chord Energy","price":143.97,"change":-0.78,"mcap":8100,"sector":"oil-gas"},{"symbol":"SOBO","name":"South Bow","price":38.23,"change":1.27,"mcap":7970,"sector":"midstream"},{"symbol":"WFRD","name":"Weatherford International","price":108.04,"change":-1.8,"mcap":7790,"sector":"services"},{"symbol":"NFG","name":"National Fuel Gas","price":81.17,"change":-0.12,"mcap":7710,"sector":"midstream"},{"symbol":"UGI","name":"UGI Corp","price":35.79,"change":-0.14,"mcap":7660,"sector":"midstream"},{"symbol":"RIG","name":"Transocean","price":6.79,"change":-0.44,"mcap":7600,"sector":"services"},{"symbol":"NOV","name":"NOV Inc","price":20.77,"change":-0.43,"mcap":7470,"sector":"oil-gas"},{"symbol":"KGS","name":"Kodiak Gas Services","price":73.35,"change":1.33,"mcap":7410,"sector":"services"},{"symbol":"DCCPY","name":"DCC Plc","price":42.2,"change":0.0,"mcap":7210,"sector":"oil-gas"},{"symbol":"VIST","name":"Vista Energy","price":75.37,"change":-0.23,"mcap":7180,"sector":"oil-gas"},{"symbol":"NXE","name":"NexGen Energy","price":10.76,"change":2.14,"mcap":7100,"sector":"clean"},{"symbol":"MTDR","name":"Matador Resources","price":56.84,"change":1.34,"mcap":7060,"sector":"oil-gas"},{"symbol":"VAL","name":"Valaris","price":101.1,"change":-0.37,"mcap":7010,"sector":"services"},{"symbol":"AROC","name":"Archrock","price":37.18,"change":0.76,"mcap":6520,"sector":"services"},{"symbol":"UEC","name":"Uranium Energy","price":13.06,"change":-0.34,"mcap":6390,"sector":"clean"},{"symbol":"LB","name":"LandBridge Company","price":78.47,"change":3.13,"mcap":6070,"sector":"oil-gas"},{"symbol":"CTXAY","name":"Ampol Limited","price":50.28,"change":0.24,"mcap":5990,"sector":"oil-gas"},{"symbol":"NJR","name":"New Jersey Resources","price":57.2,"change":0.03,"mcap":5770,"sector":"oil-gas"},{"symbol":"MGY","name":"Magnolia Oil & Gas","price":29.33,"change":0.31,"mcap":5600,"sector":"oil-gas"},{"symbol":"CRC","name":"California Resources","price":62.28,"change":0.03,"mcap":5530,"sector":"oil-gas"},{"symbol":"SEI","name":"Solaris Energy Infrastructure","price":74.7,"change":1.72,"mcap":5520,"sector":"clean"},{"symbol":"MUR","name":"Murphy Oil","price":37.98,"change":0.56,"mcap":5450,"sector":"oil-gas"},{"symbol":"CMBT","name":"CMB.TECH","price":16.88,"change":-1.66,"mcap":5410,"sector":"services"},{"symbol":"GLNG","name":"Golar LNG","price":51.99,"change":-0.62,"mcap":5280,"sector":"oil-gas"},{"symbol":"LBRT","name":"Liberty Energy","price":31.79,"change":-3.32,"mcap":5190,"sector":"services"},{"symbol":"SR","name":"Spire","price":87.0,"change":0.24,"mcap":5140,"sector":"midstream"},{"symbol":"IEP","name":"Icahn Enterprises","price":7.54,"change":0.07,"mcap":5070,"sector":"oil-gas"},{"symbol":"CNX","name":"CNX Resources","price":35.46,"change":-0.25,"mcap":5020,"sector":"oil-gas"},{"symbol":"WHD","name":"Cactus","price":62.34,"change":0.39,"mcap":5000,"sector":"oil-gas"},{"symbol":"PBF","name":"PBF Energy","price":40.41,"change":3.42,"mcap":4760,"sector":"refining"},{"symbol":"PTEN","name":"Patterson-UTI Energy","price":12.23,"change":0.12,"mcap":4660,"sector":"oil-gas"},{"symbol":"PAM","name":"Pampa Energia","price":80.2,"change":-1.85,"mcap":4650,"sector":"oil-gas"},{"symbol":"TGS","name":"Transportadora de Gas del Sur","price":29.03,"change":-3.1,"mcap":4620,"sector":"oil-gas"},{"symbol":"HCC","name":"Warrior Met Coal","price":85.2,"change":-0.3,"mcap":4510,"sector":"coal"},{"symbol":"UUUU","name":"Energy Fuels","price":18.1,"change":1.34,"mcap":4510,"sector":"clean"},{"symbol":"CRGY","name":"Crescent Energy Company","price":13.23,"change":0.95,"mcap":4360,"sector":"oil-gas"},{"symbol":"HAFN","name":"Hafnia LTD","price":8.55,"change":-3.34,"mcap":4360,"sector":"oil-gas"},{"symbol":"CNR","name":"Core Natural","price":84.69,"change":0.82,"mcap":4280,"sector":"services"},{"symbol":"USAC","name":"USA Compression","price":29.18,"change":-0.92,"mcap":4260,"sector":"oil-gas"},{"symbol":"STNG","name":"Scorpio Tankers","price":80.13,"change":-0.6,"mcap":4140,"sector":"shipping"},{"symbol":"INSW","name":"International Seaways","price":83.65,"change":-1.72,"mcap":4130,"sector":"shipping"},{"symbol":"EE","name":"Excelerate Energy","price":35.89,"change":1.7,"mcap":4110,"sector":"oil-gas"},{"symbol":"CRK","name":"Comstock Resources","price":13.84,"change":-1.91,"mcap":4060,"sector":"oil-gas"},{"symbol":"TDW","name":"Tidewater","price":79.86,"change":-1.66,"mcap":3980,"sector":"services"},{"symbol":"HP","name":"Helmerich & Payne","price":39.7,"change":-0.21,"mcap":3970,"sector":"services"},{"symbol":"PEYUF","name":"Peyto","price":19.36,"change":0.6,"mcap":3970,"sector":"oil-gas"},{"symbol":"OII","name":"Oceaneering","price":38.72,"change":0.62,"mcap":3860,"sector":"services"},{"symbol":"BTE","name":"Baytex Energy","price":5.17,"change":1.17,"mcap":3830,"sector":"oil-gas"},{"symbol":"WBI","name":"WaterBridge Infrastructure LLC","price":30.73,"change":-0.13,"mcap":3790,"sector":"services"},{"symbol":"ITRI","name":"Itron","price":82.74,"change":1.09,"mcap":3680,"sector":"services"},{"symbol":"SUNC","name":"SunocoCorp","price":71.18,"change":0.5,"mcap":3660,"sector":"midstream"},{"symbol":"BWLP","name":"BW LPG Limited","price":22.02,"change":-1.26,"mcap":3570,"sector":"shipping"},{"symbol":"EFXT","name":"Enerflex","price":27.36,"change":-0.63,"mcap":3330,"sector":"services"},{"symbol":"CVI","name":"CVR Energy","price":32.47,"change":1.96,"mcap":3260,"sector":"refining"},{"symbol":"TGSGY","name":"TGS ASA","price":16.45,"change":-0.84,"mcap":3230,"sector":"oil-gas"},{"symbol":"TRMD","name":"TORM","price":31.43,"change":-3.28,"mcap":3230,"sector":"shipping"},{"symbol":"GPOR","name":"Gulfport Energy","price":179.61,"change":0.31,"mcap":3230,"sector":"oil-gas"},{"symbol":"SDRL","name":"Seadrill Limited","price":51.03,"change":-1.17,"mcap":3210,"sector":"services"},{"symbol":"ARLP","name":"Alliance Resource","price":24.87,"change":0.16,"mcap":3190,"sector":"oil-gas"},{"symbol":"BKV","name":"BKV","price":28.44,"change":-0.39,"mcap":3110,"sector":"oil-gas"},{"symbol":"CPK","name":"Chesapeake Utilities","price":126.28,"change":-0.59,"mcap":3030,"sector":"oil-gas"},{"symbol":"BTU","name":"Peabody Energy","price":24.72,"change":1.27,"mcap":3010,"sector":"coal"},{"symbol":"CLMT","name":"Calumet","price":34.36,"change":4.53,"mcap":2980,"sector":"refining"},{"symbol":"PARR","name":"Par Pacific","price":59.03,"change":2.13,"mcap":2960,"sector":"refining"},{"symbol":"DNN","name":"Denison Mines","price":3.23,"change":0.94,"mcap":2900,"sector":"clean"},{"symbol":"DHT","name":"DHT Holdings","price":17.34,"change":-2.36,"mcap":2790,"sector":"shipping"},{"symbol":"WTTR","name":"Select Water Solutions","price":19.38,"change":-1.32,"mcap":2720,"sector":"services"},{"symbol":"DKL","name":"Delek Logistics","price":51.28,"change":-0.98,"mcap":2720,"sector":"refining"},{"symbol":"TALO","name":"Talos Energy","price":16.13,"change":1.57,"mcap":2700,"sector":"oil-gas"},{"symbol":"DK","name":"Delek","price":43.5,"change":3.33,"mcap":2670,"sector":"refining"},{"symbol":"TNK","name":"Teekay Tankers","price":76.76,"change":-1.21,"mcap":2650,"sector":"shipping"},{"symbol":"NESR","name":"National Energy Services Reunited","price":25.71,"change":-2.21,"mcap":2600,"sector":"services"},{"symbol":"NOG","name":"Northern Oil and Gas","price":23.71,"change":0.36,"mcap":2510,"sector":"oil-gas"},{"symbol":"FLOC","name":"Flowco Holdings","price":27.31,"change":-0.33,"mcap":2470,"sector":"services"},{"symbol":"AESI","name":"Atlas Energy Solutions","price":19.0,"change":-2.44,"mcap":2380,"sector":"oil-gas"},{"symbol":"NGL","name":"NGL Energy","price":18.25,"change":3.58,"mcap":2270,"sector":"oil-gas"},{"symbol":"SOC","name":"Sable Offshore","price":14.66,"change":0.58,"mcap":2250,"sector":"oil-gas"},{"symbol":"AMR","name":"Alpha Metallurgical Resources","price":176.36,"change":2.39,"mcap":2240,"sector":"coal"},{"symbol":"NEXT","name":"NextDecade","price":8.41,"change":-0.47,"mcap":2230,"sector":"oil-gas"},{"symbol":"ECO","name":"Okeanis Eco Tankers Corp","price":54.14,"change":-3.29,"mcap":2110,"sector":"shipping"},{"symbol":"PUMP","name":"ProPetro Holding","price":16.88,"change":-3.24,"mcap":2080,"sector":"services"},{"symbol":"INVX","name":"Innovex International","price":30.07,"change":-2.45,"mcap":2070,"sector":"services"},{"symbol":"GEL","name":"Genesis Energy","price":16.37,"change":-0.18,"mcap":2010,"sector":"midstream"},{"symbol":"LPG","name":"Dorian LPG","price":46.3,"change":1.03,"mcap":1980,"sector":"shipping"},{"symbol":"BCHEY","name":"Beach Energy Ltd.","price":17.0,"change":0.0,"mcap":1940,"sector":"oil-gas"},{"symbol":"VET","name":"Vermillion Energy","price":12.28,"change":-0.2,"mcap":1880,"sector":"oil-gas"},{"symbol":"KOS","name":"Kosmos Energy","price":3.07,"change":-1.76,"mcap":1820,"sector":"oil-gas"},{"symbol":"XPRO","name":"Expro Group","price":15.91,"change":-3.22,"mcap":1820,"sector":"services"},{"symbol":"SFL","name":"SFL Corp","price":12.29,"change":-2.77,"mcap":1770,"sector":"oil-gas"},{"symbol":"BORR","name":"Borr Drilling","price":5.64,"change":-0.09,"mcap":1740,"sector":"services"},{"symbol":"FLNG","name":"FLEX LNG","price":31.88,"change":-1.51,"mcap":1720,"sector":"oil-gas"},{"symbol":"GLP","name":"Global Partners","price":50.06,"change":-0.4,"mcap":1700,"sector":"midstream"},{"symbol":"RES","name":"Rpc","price":7.02,"change":-1.68,"mcap":1560,"sector":"oil-gas"},{"symbol":"NBR","name":"Nabors Industries","price":104.82,"change":0.25,"mcap":1550,"sector":"services"},{"symbol":"WKC","name":"World Kinect","price":29.29,"change":-1.38,"mcap":1510,"sector":"oil-gas"},{"symbol":"NVGS","name":"Navigator Holdings","price":23.07,"change":1.41,"mcap":1510,"sector":"shipping"},{"symbol":"HLX","name":"Helix Energy","price":10.03,"change":-0.15,"mcap":1480,"sector":"services"},{"symbol":"TTI","name":"Tetra Technologies","price":10.45,"change":1.36,"mcap":1410,"sector":"services"},{"symbol":"NRP","name":"Natural Resource","price":101.73,"change":-0.99,"mcap":1350,"sector":"oil-gas"},{"symbol":"SPH","name":"Suburban Propane","price":20.25,"change":-0.35,"mcap":1340,"sector":"midstream"},{"symbol":"ACDC","name":"ProFrac Holding","price":7.15,"change":-3.45,"mcap":1290,"sector":"oil-gas"},{"symbol":"VTOL","name":"Bristow","price":42.69,"change":-0.72,"mcap":1270,"sector":"services"},{"symbol":"TEN","name":"Tsakos Energy Navigation","price":42.65,"change":-4.09,"mcap":1250,"sector":"oil-gas"},{"symbol":"PDS","name":"Precision Drilling","price":96.37,"change":-0.07,"mcap":1250,"sector":"services"},{"symbol":"SPKOY","name":"Sinopec Kantons Holdings Ltd.","price":19.53,"change":-1.36,"mcap":1210,"sector":"oil-gas"},{"symbol":"TK","name":"Teekay Corporation","price":13.38,"change":-0.82,"mcap":1160,"sector":"shipping"},{"symbol":"NAT","name":"Nordic American Tankers","price":5.41,"change":-1.73,"mcap":1140,"sector":"shipping"},{"symbol":"DEC","name":"Diversified Energy Company","price":15.55,"change":-1.36,"mcap":1120,"sector":"oil-gas"},{"symbol":"HMH","name":"HMH Holding Inc.","price":24.12,"change":3.74,"mcap":1060,"sector":"oil-gas"},{"symbol":"HNTIY","name":"Hunting Group Plc.","price":6.7,"change":6.0,"mcap":1020,"sector":"oil-gas"},{"symbol":"TBN","name":"Tamboran Resources","price":34.87,"change":-0.54,"mcap":988.33,"sector":"oil-gas"},{"symbol":"HPK","name":"HighPeak Energy","price":7.7,"change":5.48,"mcap":988.12,"sector":"oil-gas"},{"symbol":"APC","name":"ARKO Petroleum Corp. Class A","price":20.7,"change":-0.72,"mcap":984.7,"sector":"oil-gas"},{"symbol":"KRNGY","name":"Karoon Gas Australia Ltd","price":2.75,"change":-5.26,"mcap":976.62,"sector":"oil-gas"},{"symbol":"INR","name":"Infinity Natural Resources","price":14.65,"change":1.88,"mcap":929.47,"sector":"oil-gas"},{"symbol":"METC","name":"Ramaco","price":14.04,"change":-0.93,"mcap":923.42,"sector":"coal"},{"symbol":"METCB","name":"Ramaco Resources Class B Stock","price":10.07,"change":2.91,"mcap":884.33,"sector":"coal"},{"symbol":"CAPL","name":"CrossAmerica","price":22.58,"change":-0.42,"mcap":860.76,"sector":"midstream"},{"symbol":"HNRG","name":"Hallador Energy","price":17.92,"change":-0.79,"mcap":845.05,"sector":"coal"},{"symbol":"ARKO","name":"Arko","price":7.49,"change":-0.33,"mcap":840.83,"sector":"oil-gas"},{"symbol":"REPX","name":"Riley Exploration Permian","price":38.47,"change":2.53,"mcap":832.26,"sector":"oil-gas"},{"symbol":"OBE","name":"Obsidian Energy","price":12.16,"change":-1.3,"mcap":817.79,"sector":"oil-gas"},{"symbol":"ASC","name":"Ardmore Shipping","price":18.9,"change":-2.05,"mcap":769.13,"sector":"shipping"},{"symbol":"GFR","name":"Greenfire Resources","price":6.1,"change":2.44,"mcap":764.48,"sector":"oil-gas"},{"symbol":"VTS","name":"Vitesse Energy","price":18.19,"change":-0.18,"mcap":759.58,"sector":"oil-gas"},{"symbol":"GRNT","name":"Granite Ridge Resources","price":5.55,"change":-0.82,"mcap":732.02,"sector":"oil-gas"},{"symbol":"SXC","name":"SunCoke Energy","price":8.43,"change":4.22,"mcap":716.59,"sector":"coal"},{"symbol":"WTI","name":"W&T Offshore","price":4.45,"change":1.37,"mcap":662.03,"sector":"oil-gas"},{"symbol":"CLB","name":"Core Laboratories","price":14.25,"change":-1.76,"mcap":657.34,"sector":"services"},{"symbol":"ISOU","name":"IsoEnergy Ltd.","price":10.81,"change":-1.69,"mcap":650.98,"sector":"clean"},{"symbol":"FET","name":"Forum Energy Technologies","price":56.98,"change":-2.6,"mcap":645.59,"sector":"services"},{"symbol":"SMC","name":"Summit Midstream Corporation","price":30.78,"change":-3.93,"mcap":631.27,"sector":"midstream"},{"symbol":"GPRK","name":"GeoPark","price":9.76,"change":0.51,"mcap":631.27,"sector":"services"},{"symbol":"URG","name":"Ur-Energy","price":1.57,"change":2.61,"mcap":619.84,"sector":"clean"},{"symbol":"EGY","name":"Vaalco","price":5.71,"change":-1.68,"mcap":594.79,"sector":"oil-gas"},{"symbol":"EROK","name":"EagleRock Land","price":23.31,"change":-3.21,"mcap":579.59,"sector":"oil-gas"},{"symbol":"SD","name":"SandRidge Energy","price":15.39,"change":0.52,"mcap":568.17,"sector":"oil-gas"},{"symbol":"NGS","name":"Natural Gas Services Group","price":42.5,"change":0.32,"mcap":535.43,"sector":"services"},{"symbol":"OIS","name":"Oil States International","price":8.85,"change":-0.39,"mcap":535.12,"sector":"services"},{"symbol":"SBOEY","name":"SBO AG ADR","price":3.0,"change":-18.92,"mcap":479.87,"sector":"oil-gas"},{"symbol":"NINE","name":"Nine Energy Service","price":10.65,"change":2.4,"mcap":461.26,"sector":"services"},{"symbol":"CLNE","name":"Clean Energy Fuels","price":2.07,"change":-1.72,"mcap":454.21,"sector":"clean"},{"symbol":"NUAI","name":"New Era Energy & Digital","price":4.42,"change":4.87,"mcap":443.65,"sector":"oil-gas"},{"symbol":"SGU","name":"Star Group","price":12.6,"change":-1.18,"mcap":415.02,"sector":"midstream"},{"symbol":"PNRG","name":"PrimeEnergy","price":253.95,"change":2.41,"mcap":408.56,"sector":"oil-gas"},{"symbol":"KNOP","name":"KNOT Offshore","price":11.51,"change":-0.17,"mcap":406.0,"sector":"oil-gas"},{"symbol":"RNGR","name":"Ranger Energy Services","price":16.24,"change":-0.58,"mcap":387.79,"sector":"services"},{"symbol":"NC","name":"NACCO","price":49.36,"change":-0.2,"mcap":372.26,"sector":"oil-gas"},{"symbol":"OPAL","name":"OPAL Fuels","price":2.2,"change":9.25,"mcap":372.24,"sector":"oil-gas"},{"symbol":"GASS","name":"StealthGas","price":9.87,"change":-3.42,"mcap":365.35,"sector":"oil-gas"},{"symbol":"CTJHY","name":"Citic Resources Holdings Ltd.","price":8.76,"change":-26.03,"mcap":344.95,"sector":"oil-gas"},{"symbol":"FTW","name":"Presidio Production","price":12.15,"change":-0.57,"mcap":335.97,"sector":"oil-gas"},{"symbol":"GTE","name":"Gran Tierra Energy","price":8.55,"change":0.94,"mcap":302.33,"sector":"oil-gas"},{"symbol":"TUWOY","name":"Tullow Oil Plc.","price":0.1002,"change":-8.91,"mcap":301.46,"sector":"oil-gas"},{"symbol":"REI","name":"Ring Energy","price":1.39,"change":1.84,"mcap":290.03,"sector":"oil-gas"},{"symbol":"EU","name":"enCore Energy Corp","price":1.49,"change":1.02,"mcap":288.44,"sector":"clean"},{"symbol":"IMPP","name":"Imperial Petroleum","price":5.57,"change":8.48,"mcap":250.03,"sector":"oil-gas"},{"symbol":"IMPPP","name":"Imperial Petroleum Inc. 8.75% Series","price":25.7,"change":0.0,"mcap":229.05,"sector":"oil-gas"},{"symbol":"AREC","name":"American Resources","price":2.14,"change":-0.47,"mcap":228.38,"sector":"oil-gas"},{"symbol":"ANNA","name":"AleAnna","price":3.24,"change":7.28,"mcap":217.54,"sector":"oil-gas"},{"symbol":"KGEI","name":"Kolibri Global Energy","price":5.89,"change":-0.93,"mcap":208.94,"sector":"oil-gas"},{"symbol":"AMPY","name":"Amplify","price":5.04,"change":-0.3,"mcap":207.88,"sector":"oil-gas"},{"symbol":"OMSE","name":"OMS Energy Technologies Inc","price":4.7,"change":0.08,"mcap":199.67,"sector":"services"},{"symbol":"SMHI","name":"SEACOR Marine","price":7.24,"change":-1.23,"mcap":196.88,"sector":"shipping"},{"symbol":"PED","name":"PEDEVCO","price":14.74,"change":4.17,"mcap":196.06,"sector":"oil-gas"},{"symbol":"EPSN","name":"Epsilon Energy","price":6.21,"change":-0.32,"mcap":187.84,"sector":"oil-gas"},{"symbol":"NFE","name":"New Fortress Energy","price":0.6229,"change":3.9,"mcap":177.49,"sector":"clean"},{"symbol":"EPM","name":"Evolution Petroleum","price":4.4,"change":-3.51,"mcap":158.02,"sector":"oil-gas"},{"symbol":"TUSK","name":"Mammoth Energy","price":3.26,"change":-4.4,"mcap":157.52,"sector":"oil-gas"},{"symbol":"TORO","name":"Toro","price":5.33,"change":-1.39,"mcap":153.2,"sector":"oil-gas"},{"symbol":"DLNG","name":"Dynagas LNG","price":3.87,"change":-1.9,"mcap":140.8,"sector":"oil-gas"},{"symbol":"BOOM","name":"DMC Global","price":6.85,"change":-0.07,"mcap":140.52,"sector":"services"},{"symbol":"DWSN","name":"Dawson Geophysical","price":4.09,"change":-2.27,"mcap":127.32,"sector":"services"},{"symbol":"GLND","name":"Greenland Energy Company","price":2.74,"change":-3.6,"mcap":120.26,"sector":"oil-gas"},{"symbol":"NCSM","name":"NCS Multistage","price":44.55,"change":1.93,"mcap":116.77,"sector":"services"},{"symbol":"GEOS","name":"Geospace Technologies","price":8.11,"change":-0.73,"mcap":105.43,"sector":"services"},{"symbol":"EP","name":"Empire Petroleum","price":2.63,"change":-1.13,"mcap":104.65,"sector":"oil-gas"},{"symbol":"DTI","name":"Drilling Tools International","price":2.94,"change":-0.51,"mcap":103.13,"sector":"services"},{"symbol":"MMLP","name":"Martin Midstream","price":2.55,"change":-0.39,"mcap":99.77,"sector":"midstream"},{"symbol":"PROP","name":"Prairie Operating Co.","price":0.9574,"change":9.67,"mcap":93.38,"sector":"oil-gas"},{"symbol":"LGO","name":"Largo","price":0.9728,"change":-1.4,"mcap":81.46,"sector":"oil-gas"},{"symbol":"AEC","name":"Anfield Energy","price":4.4,"change":-0.92,"mcap":80.93,"sector":"oil-gas"},{"symbol":"LSE","name":"Leishen Energy Holding Co., Ltd.","price":4.73,"change":0.16,"mcap":80.48,"sector":"oil-gas"},{"symbol":"SLNG","name":"Stabilis Solutions","price":4.12,"change":-3.63,"mcap":75.87,"sector":"services"},{"symbol":"MIND","name":"MIND Technology","price":7.05,"change":1.51,"mcap":64.03,"sector":"services"},{"symbol":"KLXE","name":"KLX Energy","price":3.09,"change":-2.83,"mcap":61.73,"sector":"services"},{"symbol":"AGIG","name":"Abundia Global Impact Group","price":1.19,"change":-3.48,"mcap":52.39,"sector":"oil-gas"},{"symbol":"INDO","name":"Indonesia Energy","price":3.27,"change":-2.43,"mcap":50.47,"sector":"oil-gas"},{"symbol":"USEG","name":"U.S. Energy","price":0.947,"change":7.38,"mcap":49.81,"sector":"oil-gas"},{"symbol":"PXS","name":"Pyxis Tankers","price":4.68,"change":0.11,"mcap":47.88,"sector":"shipping"},{"symbol":"BATL","name":"Battalion Oil","price":1.88,"change":-4.99,"mcap":41.51,"sector":"oil-gas"},{"symbol":"JAGU","name":"Jaguar Uranium Corp","price":1.99,"change":-2.7,"mcap":40.99,"sector":"clean"},{"symbol":"FNUC","name":"Frontier Nuclear and Minerals","price":2.11,"change":1.44,"mcap":32.21,"sector":"clean"},{"symbol":"EONR","name":"EON Resources","price":0.6296,"change":-1.56,"mcap":31.28,"sector":"oil-gas"},{"symbol":"UFG","name":"Uni-Fuels Holdings","price":0.7161,"change":1.57,"mcap":24.02,"sector":"oil-gas"},{"symbol":"FMST","name":"Foremost Clean Energy","price":1.61,"change":3.21,"mcap":23.52,"sector":"clean"},{"symbol":"PSHG","name":"Performance Shipping","price":1.67,"change":-2.91,"mcap":20.89,"sector":"shipping"},{"symbol":"TMDE","name":"TMD Energy Limited","price":0.7749,"change":-1.03,"mcap":18.33,"sector":"oil-gas"},{"symbol":"MXC","name":"Mexco Energy","price":8.97,"change":2.34,"mcap":17.9,"sector":"oil-gas"},{"symbol":"BRN","name":"Barnwell Industries","price":1.11,"change":0.91,"mcap":15.8,"sector":"oil-gas"},{"symbol":"HKIT","name":"Hitek Global Inc.","price":0.6607,"change":-0.68,"mcap":13.64,"sector":"oil-gas"},{"symbol":"TPET","name":"Trio Petroleum","price":0.3799,"change":-1.32,"mcap":12.82,"sector":"oil-gas"},{"symbol":"SKYQ","name":"Sky Quarry","price":2.66,"change":-4.32,"mcap":12.52,"sector":"oil-gas"},{"symbol":"STAK","name":"STAK Inc.","price":1.05,"change":-4.55,"mcap":10.51,"sector":"oil-gas"},{"symbol":"RBNE","name":"Robin Energy","price":1.19,"change":-0.83,"mcap":9.01,"sector":"oil-gas"},{"symbol":"CETY","name":"Clean Energy","price":0.6919,"change":-4.84,"mcap":8.42,"sector":"clean"},{"symbol":"DLXY","name":"Delixy Holdings Limited Class A","price":0.494,"change":4.88,"mcap":8.09,"sector":"oil-gas"},{"symbol":"TOPS","name":"TOP Ships Inc.","price":0.98,"change":4.03,"mcap":7.41,"sector":"oil-gas"},{"symbol":"VIVK","name":"Vivakor","price":1.31,"change":0.77,"mcap":5.63,"sector":"oil-gas"}];
+
+const SECTOR = {
+  "integrated": { name: "Integrated", color: "#ffb800" },
+  "oil-gas":    { name: "E&P", color: "#ff8a3d" },
+  "midstream":  { name: "Midstream", color: "#00d4ff" },
+  "refining":   { name: "Refining", color: "#ff00aa" },
+  "services":   { name: "Services", color: "#b66dff" },
+  "shipping":   { name: "Shipping", color: "#00ff88" },
+  "clean":      { name: "Clean/Uranium", color: "#7eff5a" },
+  "coal":       { name: "Coal", color: "#a08570" }
+};
+
+const fmtPrice = v => v < 1 ? "$" + v.toFixed(4) : "$" + v.toFixed(2);
+const fmtMcap = v => {
+  if (v >= 1000) return "$" + (v/1000).toFixed(2) + "B";
+  if (v >= 1) return "$" + v.toFixed(2) + "M";
+  return "$" + (v*1000).toFixed(0) + "K";
+};
+const fmtPct = v => (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
+
+const $ = id => document.getElementById(id);
+
+/* ===== CLOCK ===== */
+function updateClock() {
+  $('clock').textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
+  $('overview-date').textContent = new Date().toLocaleDateString('en-US');
+}
+setInterval(updateClock, 1000); updateClock();
+
+/* ===== METRICS ===== */
+function renderMetrics() {
+  const totalCap = STOCKS.reduce((s,x)=>s+x.mcap, 0);
+  const prices = STOCKS.map(s=>s.price).sort((a,b)=>a-b);
+  const med = prices[Math.floor(prices.length/2)];
+  const up = STOCKS.filter(s=>s.change>0).length;
+  const down = STOCKS.filter(s=>s.change<0).length;
+  const avg = STOCKS.reduce((s,x)=>s+x.change, 0) / STOCKS.length;
+  $('m-total').textContent = "$" + (totalCap/1000).toFixed(1) + "B";
+  $('m-median').textContent = "$" + med.toFixed(2);
+  $('m-up').textContent = up + " (" + Math.round(up/STOCKS.length*100) + "%)";
+  $('m-down').textContent = down + " (" + Math.round(down/STOCKS.length*100) + "%)";
+  $('m-avg').textContent = fmtPct(avg);
+}
+
+/* ===== TREEMAP (custom squarified) ===== */
+function squarify(items, x, y, w, h) {
+  const total = items.reduce((s,i)=>s+i.value, 0);
+  const result = [];
+  let remaining = items.slice();
+  let cx = x, cy = y, cw = w, ch = h;
+  
+  while (remaining.length > 0) {
+    const horizontal = cw >= ch;
+    const side = horizontal ? ch : cw;
+    let row = [];
+    let rowSum = 0;
+    let bestScore = Infinity;
+    
+    for (let i = 0; i < remaining.length; i++) {
+      const newRow = row.concat([remaining[i]]);
+      const newSum = rowSum + remaining[i].value;
+      const remTotal = remaining.slice(i).reduce((s,x)=>s+x.value, 0);
+      const totalArea = cw * ch * (newSum / remaining.reduce((s,x)=>s+x.value, 0));
+      const rowLen = totalArea / side;
+      const maxRatio = Math.max(
+        ...newRow.map(item => {
+          const itemArea = (item.value / newSum) * totalArea;
+          const itemSide = itemArea / rowLen;
+          return Math.max(rowLen / itemSide, itemSide / rowLen);
+        })
+      );
+      if (maxRatio < bestScore) {
+        bestScore = maxRatio;
+        row = newRow;
+        rowSum = newSum;
+      } else break;
+    }
+    
+    const totalRemSum = remaining.reduce((s,x)=>s+x.value, 0);
+    const rowArea = (rowSum / totalRemSum) * (cw * ch);
+    const rowLen = rowArea / side;
+    let offset = 0;
+    
+    for (const item of row) {
+      const itemArea = (item.value / rowSum) * rowArea;
+      const itemSide = itemArea / rowLen;
+      if (horizontal) {
+        result.push({ ...item, x: cx, y: cy + offset, w: rowLen, h: itemSide });
+      } else {
+        result.push({ ...item, x: cx + offset, y: cy, w: itemSide, h: rowLen });
+      }
+      offset += itemSide;
+    }
+    
+    if (horizontal) { cx += rowLen; cw -= rowLen; }
+    else { cy += rowLen; ch -= rowLen; }
+    remaining = remaining.slice(row.length);
+  }
+  return result;
+}
+
+function renderTreemap() {
+  const top = [...STOCKS].sort((a,b)=>b.mcap-a.mcap).slice(0, 60);
+  const items = top.map(s => ({ ...s, value: s.mcap }));
+  const W = $('treemap-container').clientWidth || 700;
+  const H = 480;
+  const rects = squarify(items, 0, 0, W, H);
+  
+  let svg = `<svg class="treemap-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}">`;
+  rects.forEach(r => {
+    const showSym = r.w > 32 && r.h > 18;
+    const showCap = r.w > 60 && r.h > 40;
+    const fontSize = Math.min(22, Math.max(9, r.w / 5));
+    svg += `<g data-sym="${r.symbol}" style="cursor:pointer">`;
+    svg += `<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="${SECTOR[r.sector].color}"></rect>`;
+    if (showSym) {
+      svg += `<text x="${r.x + 5}" y="${r.y + 16}" font-size="${fontSize}" font-weight="800">${r.symbol}</text>`;
+    }
+    if (showCap) {
+      svg += `<text x="${r.x + 5}" y="${r.y + r.h - 6}" font-size="9" opacity="0.85">${fmtMcap(r.mcap)}</text>`;
+    }
+    svg += `</g>`;
+  });
+  svg += `</svg>`;
+  $('treemap-container').innerHTML = svg;
+  $('treemap-container').querySelectorAll('g[data-sym]').forEach(g => {
+    g.addEventListener('click', () => openModal(STOCKS.find(s => s.symbol === g.dataset.sym)));
+  });
+}
+
+function renderTreemapLegend() {
+  const counts = {};
+  STOCKS.forEach(s => counts[s.sector] = (counts[s.sector]||0) + 1);
+  $('treemap-legend').innerHTML = Object.keys(SECTOR).map(k => `
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:${SECTOR[k].color}"></div>
+      <span>${SECTOR[k].name}</span>
+      <span style="color:var(--text-2)">(${counts[k]||0})</span>
+    </div>
+  `).join('');
+}
+
+/* ===== BAR LISTS ===== */
+function renderBarList(elemId, list, valFn, color, fmtFn) {
+  const max = Math.max(...list.map(s => Math.abs(valFn(s))));
+  $(elemId).innerHTML = list.map(s => `
+    <div class="bar-row" data-sym="${s.symbol}">
+      <span class="sym">${s.symbol}</span>
+      <div class="bar-track">
+        <div class="bar-fill ${color}" style="width:${(Math.abs(valFn(s))/max)*100}%"></div>
+      </div>
+      <span class="right" style="color: var(--${color === 'green' ? 'green' : (color === 'red' ? 'red' : (color === 'cyan' ? 'cyan' : 'amber'))})">${fmtFn(valFn(s))}</span>
+    </div>
+  `).join('');
+  $(elemId).querySelectorAll('.bar-row').forEach(r => {
+    r.addEventListener('click', () => openModal(STOCKS.find(s => s.symbol === r.dataset.sym)));
+  });
+}
+
+function renderOverviewLists() {
+  renderBarList('top-gainers', [...STOCKS].sort((a,b)=>b.change-a.change).slice(0,15), s=>s.change, 'green', fmtPct);
+  renderBarList('top-losers', [...STOCKS].sort((a,b)=>a.change-b.change).slice(0,15), s=>s.change, 'red', fmtPct);
+  renderBarList('top-mcap', [...STOCKS].sort((a,b)=>b.mcap-a.mcap).slice(0,10), s=>s.mcap, '', fmtMcap);
+}
+
+function renderRankings() {
+  renderBarList('rank-mcap', [...STOCKS].sort((a,b)=>b.mcap-a.mcap).slice(0,20), s=>s.mcap, '', fmtMcap);
+  renderBarList('rank-gainers', [...STOCKS].sort((a,b)=>b.change-a.change).slice(0,20), s=>s.change, 'green', fmtPct);
+  renderBarList('rank-losers', [...STOCKS].sort((a,b)=>a.change-b.change).slice(0,20), s=>s.change, 'red', fmtPct);
+  renderBarList('rank-price', [...STOCKS].sort((a,b)=>b.price-a.price).slice(0,20), s=>s.price, 'cyan', fmtPrice);
+}
+
+/* ===== SCREENER ===== */
+let sortKey = 'change', sortAsc = false;
+let fSector = 'all', fChange = 'all', fCap = 'all', searchQ = '';
+
+function filtered() {
+  return STOCKS.filter(s => {
+    if (fSector !== 'all' && s.sector !== fSector) return false;
+    if (fChange === 'up' && s.change <= 0) return false;
+    if (fChange === 'down' && s.change >= 0) return false;
+    if (fChange === 'big-up' && s.change <= 5) return false;
+    if (fChange === 'big-down' && s.change >= -5) return false;
+    if (fCap === 'mega' && s.mcap < 100000) return false;
+    if (fCap === 'large' && (s.mcap < 10000 || s.mcap >= 100000)) return false;
+    if (fCap === 'mid' && (s.mcap < 1000 || s.mcap >= 10000)) return false;
+    if (fCap === 'small' && s.mcap >= 1000) return false;
+    if (searchQ && !s.symbol.toLowerCase().includes(searchQ) && !s.name.toLowerCase().includes(searchQ)) return false;
+    return true;
+  });
+}
+
+function renderTable() {
+  let data = filtered();
+  data.sort((a, b) => {
+    let va = a[sortKey], vb = b[sortKey];
+    if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+    return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+  });
+  $('screener-count').textContent = data.length;
+  $('stock-tbody').innerHTML = data.map(s => `
+    <tr data-sym="${s.symbol}">
+      <td class="sym">${s.symbol}</td>
+      <td>${s.name}</td>
+      <td style="color:${SECTOR[s.sector].color}; font-size:11px;">${SECTOR[s.sector].name}</td>
+      <td class="right">${fmtPrice(s.price)}</td>
+      <td class="right ${s.change >= 0 ? 'up' : 'down'}">${fmtPct(s.change)}</td>
+      <td class="right">${fmtMcap(s.mcap)}</td>
+    </tr>
+  `).join('');
+  $('stock-tbody').querySelectorAll('tr').forEach(tr => {
+    tr.addEventListener('click', () => openModal(STOCKS.find(s => s.symbol === tr.dataset.sym)));
+  });
+  document.querySelectorAll('#stock-table th').forEach(th => {
+    th.classList.remove('sorted', 'asc');
+    if (th.dataset.sort === sortKey) {
+      th.classList.add('sorted');
+      if (sortAsc) th.classList.add('asc');
+    }
+  });
+}
+
+document.querySelectorAll('#stock-table th').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.sort;
+    if (sortKey === k) sortAsc = !sortAsc;
+    else { sortKey = k; sortAsc = false; }
+    renderTable();
+  });
+});
+
+$('search-input').addEventListener('input', e => {
+  searchQ = e.target.value.toLowerCase();
+  renderTable();
+});
+
+document.querySelectorAll('.chip[data-sector]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-sector]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    fSector = b.dataset.sector;
+    renderTable();
+  });
+});
+document.querySelectorAll('.chip[data-change]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-change]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    fChange = b.dataset.change;
+    renderTable();
+  });
+});
+document.querySelectorAll('.chip[data-cap]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-cap]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    fCap = b.dataset.cap;
+    renderTable();
+  });
+});
+
+/* ===== CHARTS (custom SVG) ===== */
+function renderBarChartH(elemId, data, valFn, labelFn, colorFn, fmtFn) {
+  const W = 600, BH = 18, PAD_L = 60, PAD_R = 90, PAD_T = 10, PAD_B = 20;
+  const H = data.length * (BH + 4) + PAD_T + PAD_B;
+  const max = Math.max(...data.map(valFn));
+  const barW = W - PAD_L - PAD_R;
+  let svg = `<svg class="bar-chart" viewBox="0 0 ${W} ${H}" width="100%">`;
+  data.forEach((d, i) => {
+    const y = PAD_T + i * (BH + 4);
+    const w = (valFn(d) / max) * barW;
+    svg += `<text x="${PAD_L - 6}" y="${y + BH/2 + 4}" text-anchor="end" style="font-weight:700; fill:var(--amber); font-size:11px;">${labelFn(d)}</text>`;
+    svg += `<rect x="${PAD_L}" y="${y}" width="${w}" height="${BH}" fill="${colorFn(d)}" data-sym="${d.symbol}" style="cursor:pointer"></rect>`;
+    svg += `<text x="${PAD_L + w + 6}" y="${y + BH/2 + 4}" style="fill:var(--text-1); font-size:11px;">${fmtFn(valFn(d))}</text>`;
+  });
+  svg += `</svg>`;
+  $(elemId).innerHTML = svg;
+  $(elemId).querySelectorAll('rect[data-sym]').forEach(r => {
+    r.addEventListener('click', () => openModal(STOCKS.find(s => s.symbol === r.dataset.sym)));
+  });
+}
+
+function renderBarChartV(elemId, labels, values, colors, ylabel) {
+  const W = 600, H = 320, PAD_L = 40, PAD_R = 20, PAD_T = 20, PAD_B = 50;
+  const max = Math.max(...values);
+  const barW = (W - PAD_L - PAD_R) / values.length;
+  let svg = `<svg class="bar-chart" viewBox="0 0 ${W} ${H}" width="100%">`;
+  // Y grid
+  for (let i = 0; i <= 4; i++) {
+    const y = PAD_T + (H - PAD_T - PAD_B) * (i / 4);
+    const v = Math.round(max * (1 - i/4));
+    svg += `<line class="grid-line" x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}"></line>`;
+    svg += `<text x="${PAD_L - 4}" y="${y + 4}" text-anchor="end" style="font-size:9px; fill:var(--text-2)">${v}</text>`;
+  }
+  // bars
+  values.forEach((v, i) => {
+    const h = (v / max) * (H - PAD_T - PAD_B);
+    const x = PAD_L + i * barW + 2;
+    const y = H - PAD_B - h;
+    svg += `<rect x="${x}" y="${y}" width="${barW - 4}" height="${h}" fill="${colors[i]}"></rect>`;
+    svg += `<text x="${x + barW/2 - 2}" y="${y - 4}" text-anchor="middle" style="font-size:10px; fill:var(--text-0); font-weight:700">${v}</text>`;
+    svg += `<text x="${x + barW/2 - 2}" y="${H - PAD_B + 14}" text-anchor="middle" style="font-size:9px; fill:var(--text-2)">${labels[i]}</text>`;
+  });
+  svg += `</svg>`;
+  $(elemId).innerHTML = svg;
+}
+
+function renderScatter(elemId) {
+  const W = 600, H = 380, PAD_L = 50, PAD_R = 20, PAD_T = 20, PAD_B = 60;
+  // log scale
+  const minP = Math.min(...STOCKS.map(s=>s.price));
+  const maxP = Math.max(...STOCKS.map(s=>s.price));
+  const minM = Math.min(...STOCKS.map(s=>s.mcap));
+  const maxM = Math.max(...STOCKS.map(s=>s.mcap));
+  const logP = v => Math.log10(v);
+  const xMin = logP(minP), xMax = logP(maxP);
+  const yMin = logP(minM), yMax = logP(maxM);
+  
+  let svg = `<svg class="scatter-chart" viewBox="0 0 ${W} ${H}" width="100%">`;
+  // grid
+  for (let i = 0; i <= 4; i++) {
+    const y = PAD_T + (H - PAD_T - PAD_B) * (i / 4);
+    svg += `<line class="grid-line" x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}"></line>`;
+    const val = Math.pow(10, yMax - (yMax - yMin) * i/4);
+    svg += `<text x="${PAD_L - 4}" y="${y + 4}" text-anchor="end" style="font-size:9px; fill:var(--text-2)">${fmtMcap(val)}</text>`;
+  }
+  for (let i = 0; i <= 4; i++) {
+    const x = PAD_L + (W - PAD_L - PAD_R) * (i / 4);
+    svg += `<line class="grid-line" x1="${x}" y1="${PAD_T}" x2="${x}" y2="${H - PAD_B}"></line>`;
+    const val = Math.pow(10, xMin + (xMax - xMin) * i/4);
+    svg += `<text x="${x}" y="${H - PAD_B + 14}" text-anchor="middle" style="font-size:9px; fill:var(--text-2)">${val < 1 ? '$'+val.toFixed(2) : '$'+val.toFixed(0)}</text>`;
+  }
+  // axes labels
+  svg += `<text x="${W/2}" y="${H - 5}" text-anchor="middle" style="font-size:10px; fill:var(--text-1)">Price (log)</text>`;
+  svg += `<text x="14" y="${H/2}" text-anchor="middle" transform="rotate(-90 14 ${H/2})" style="font-size:10px; fill:var(--text-1)">Market Cap (log)</text>`;
+  // points
+  STOCKS.forEach(s => {
+    const x = PAD_L + ((logP(s.price) - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R);
+    const y = PAD_T + ((yMax - logP(s.mcap)) / (yMax - yMin)) * (H - PAD_T - PAD_B);
+    svg += `<circle cx="${x}" cy="${y}" r="3" fill="${SECTOR[s.sector].color}" opacity="0.75" data-sym="${s.symbol}"></circle>`;
+  });
+  // legend
+  let lx = PAD_L;
+  const ly = 12;
+  Object.keys(SECTOR).forEach((k, i) => {
+    const col = i % 4;
+    const row = Math.floor(i / 4);
+    const lxx = PAD_L + col * 130;
+    const lyy = PAD_T - 6 + row * 14;
+    svg += `<rect x="${lxx}" y="${lyy - 8}" width="8" height="8" fill="${SECTOR[k].color}"></rect>`;
+    svg += `<text x="${lxx + 12}" y="${lyy}" style="font-size:9px; fill:var(--text-1)">${SECTOR[k].name}</text>`;
+  });
+  svg += `</svg>`;
+  $(elemId).innerHTML = svg;
+  $(elemId).querySelectorAll('circle[data-sym]').forEach(c => {
+    c.addEventListener('click', () => openModal(STOCKS.find(s => s.symbol === c.dataset.sym)));
+  });
+}
+
+function renderCharts() {
+  // Top 30 mcap
+  const top30 = [...STOCKS].sort((a,b)=>b.mcap-a.mcap).slice(0, 30);
+  renderBarChartH('chart-mcap', top30,
+    s => s.mcap,
+    s => s.symbol,
+    s => SECTOR[s.sector].color,
+    fmtMcap);
+  
+  // Change distribution
+  const bins = [-100, -10, -5, -3, -1, 0, 1, 3, 5, 10, 100];
+  const labels = ['<-10','-10/-5','-5/-3','-3/-1','-1/0','0/1','1/3','3/5','5/10','>10'];
+  const colors = ['#aa1f3a','#ff3b5c','#ff5577','#ff7799','#ffaa66','#7eff5a','#00ff88','#00cc66','#00aa55','#008844'];
+  const counts = new Array(labels.length).fill(0);
+  STOCKS.forEach(s => {
+    for (let i = 0; i < bins.length - 1; i++) {
+      if (s.change >= bins[i] && s.change < bins[i+1]) { counts[i]++; break; }
+    }
+  });
+  renderBarChartV('chart-changedist', labels, counts, colors);
+  
+  // Scatter
+  renderScatter('chart-scatter');
+  
+  // Price distribution
+  const pBins = [0, 1, 5, 10, 25, 50, 100, 250, 10000];
+  const pLabels = ['<$1','$1-5','$5-10','$10-25','$25-50','$50-100','$100-250','>$250'];
+  const pCounts = new Array(pLabels.length).fill(0);
+  STOCKS.forEach(s => {
+    for (let i = 0; i < pBins.length - 1; i++) {
+      if (s.price >= pBins[i] && s.price < pBins[i+1]) { pCounts[i]++; break; }
+    }
+  });
+  const pColors = pCounts.map(() => '#00d4ff');
+  renderBarChartV('chart-pricedist', pLabels, pCounts, pColors);
+}
+
+/* ===== SECTORS ===== */
+function aggSector() {
+  const map = {};
+  Object.keys(SECTOR).forEach(k => map[k] = { count:0, mcap:0, change:0, avgPrice:0, stocks:[], gainers:0, losers:0 });
+  STOCKS.forEach(s => {
+    const m = map[s.sector];
+    m.count++;
+    m.mcap += s.mcap;
+    m.change += s.change;
+    m.avgPrice += s.price;
+    if (s.change > 0) m.gainers++;
+    if (s.change < 0) m.losers++;
+    m.stocks.push(s);
+  });
+  Object.keys(map).forEach(k => {
+    if (map[k].count > 0) {
+      map[k].change /= map[k].count;
+      map[k].avgPrice /= map[k].count;
+    }
+  });
+  return map;
+}
+
+function renderDonut() {
+  const agg = aggSector();
+  const keys = Object.keys(agg);
+  const total = keys.reduce((s,k) => s + agg[k].mcap, 0);
+  const W = 320, H = 320, R = 130, IR = 80, CX = W/2, CY = H/2;
+  let angle = -Math.PI / 2;
+  let svg = `<svg class="donut-svg" viewBox="0 0 ${W} ${H}" width="100%" style="max-width:320px; display:block; margin:0 auto;">`;
+  keys.forEach(k => {
+    const v = agg[k].mcap;
+    const arc = (v / total) * Math.PI * 2;
+    const a1 = angle, a2 = angle + arc;
+    const x1 = CX + R * Math.cos(a1), y1 = CY + R * Math.sin(a1);
+    const x2 = CX + R * Math.cos(a2), y2 = CY + R * Math.sin(a2);
+    const x3 = CX + IR * Math.cos(a2), y3 = CY + IR * Math.sin(a2);
+    const x4 = CX + IR * Math.cos(a1), y4 = CY + IR * Math.sin(a1);
+    const large = arc > Math.PI ? 1 : 0;
+    svg += `<path d="M ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${IR} ${IR} 0 ${large} 0 ${x4} ${y4} Z" fill="${SECTOR[k].color}" stroke="var(--bg-0)" stroke-width="2"></path>`;
+    angle = a2;
+  });
+  svg += `<text x="${CX}" y="${CY - 4}" text-anchor="middle" style="font-size:14px; fill:var(--text-1); font-weight:700">TOTAL</text>`;
+  svg += `<text x="${CX}" y="${CY + 14}" text-anchor="middle" style="font-size:13px; fill:var(--amber); font-weight:700">$${(total/1000).toFixed(1)}B</text>`;
+  svg += `</svg>`;
+  // legend below
+  let leg = `<div class="legend-row" style="justify-content:center; margin-top: 12px;">`;
+  keys.forEach(k => {
+    leg += `<div class="legend-item">
+      <div class="legend-swatch" style="background:${SECTOR[k].color}"></div>
+      <span>${SECTOR[k].name}</span>
+      <span style="color:var(--text-2)">${(agg[k].mcap/total*100).toFixed(1)}%</span>
+    </div>`;
+  });
+  leg += `</div>`;
+  $('donut-container').innerHTML = svg + leg;
+}
+
+function renderSectorBars() {
+  const agg = aggSector();
+  const keys = Object.keys(agg).sort((a,b) => agg[b].change - agg[a].change);
+  const max = Math.max(...keys.map(k => Math.abs(agg[k].change)));
+  $('sector-bars').innerHTML = keys.map(k => {
+    const a = agg[k];
+    const isPos = a.change >= 0;
+    return `
+    <div style="margin-bottom: 14px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom: 4px; font-size: 13px;">
+        <span style="color:${SECTOR[k].color}; font-weight:700">${SECTOR[k].name} <span style="color:var(--text-2); font-size:10px; font-weight:400">(${a.count})</span></span>
+        <span style="color:${isPos ? 'var(--green)' : 'var(--red)'}; font-weight:700">${fmtPct(a.change)}</span>
+      </div>
+      <div class="bar-track" style="height:14px;">
+        <div class="bar-fill" style="width:${(Math.abs(a.change)/max)*100}%; background:${SECTOR[k].color};"></div>
+      </div>
+    </div>
+    `;
+  }).join('');
+}
+
+function renderSectorCards() {
+  const agg = aggSector();
+  const keys = Object.keys(agg).sort((a,b) => agg[b].mcap - agg[a].mcap);
+  $('sector-cards').innerHTML = keys.map(k => {
+    const a = agg[k];
+    const topHolding = [...a.stocks].sort((x,y)=>y.mcap-x.mcap)[0];
+    return `
+      <div class="card" style="padding: 16px; border-top: 3px solid ${SECTOR[k].color}; margin-bottom: 0;">
+        <div style="font-size: 18px; font-weight: 800; color: ${SECTOR[k].color};">${SECTOR[k].name}</div>
+        <div style="color: var(--text-2); font-size: 10px; margin-top: 2px; letter-spacing: 0.1em; text-transform: uppercase;">${a.count} instruments</div>
+        <div style="margin-top: 12px; font-size: 12px;">
+          <div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed var(--border);"><span style="color: var(--text-2);">MCap</span><span>${fmtMcap(a.mcap)}</span></div>
+          <div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed var(--border);"><span style="color: var(--text-2);">Avg Price</span><span>$${a.avgPrice.toFixed(2)}</span></div>
+          <div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed var(--border);"><span style="color: var(--text-2);">Avg Change</span><span style="color:${a.change>=0?'var(--green)':'var(--red)'}">${fmtPct(a.change)}</span></div>
+          <div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed var(--border);"><span style="color: var(--text-2);">Up / Down</span><span><span style="color:var(--green)">${a.gainers}</span>/<span style="color:var(--red)">${a.losers}</span></span></div>
+          <div style="display:flex; justify-content:space-between; padding: 4px 0;"><span style="color: var(--text-2);">Top</span><span style="color:${SECTOR[k].color}; font-weight: 700">${topHolding.symbol}</span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ===== DETAIL CARDS w/ Pagination ===== */
+let detailSort = 'mcap', detailSector = 'all', detailPage = 0;
+const PER_PAGE = 50;
+
+function getDetailFiltered() {
+  let d = STOCKS.filter(s => detailSector === 'all' || s.sector === detailSector);
+  d.sort((a, b) => {
+    if (detailSort === 'symbol') return a.symbol.localeCompare(b.symbol);
+    return b[detailSort] - a[detailSort];
+  });
+  return d;
+}
+
+function renderDetailCards() {
+  const all = getDetailFiltered();
+  const totalPages = Math.max(1, Math.ceil(all.length / PER_PAGE));
+  if (detailPage >= totalPages) detailPage = 0;
+  const page = all.slice(detailPage * PER_PAGE, (detailPage + 1) * PER_PAGE);
+
+  $('card-count').textContent = page.length;
+  $('card-total').textContent = all.length;
+  $('detail-grid').innerHTML = page.map((s, i) => `
+    <div class="detail-card" data-sym="${s.symbol}">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="sym-big">${s.symbol}</div>
+        <div style="font-size: 9px; color: var(--text-2);">№ ${String(detailPage * PER_PAGE + i + 1).padStart(3,'0')}</div>
+      </div>
+      <div class="name-line">${s.name}</div>
+      <span class="sector-badge" style="background: ${SECTOR[s.sector].color}22; color: ${SECTOR[s.sector].color}; border: 1px solid ${SECTOR[s.sector].color}66;">${SECTOR[s.sector].name}</span>
+      <div class="price-big">${fmtPrice(s.price)} <span style="font-size:14px; color:${s.change>=0?'var(--green)':'var(--red)'}">${fmtPct(s.change)}</span></div>
+      <div class="row-stats">
+        <div><div class="stat-lbl">MCap</div><div class="stat-val" style="color: var(--amber); font-weight: 700">${fmtMcap(s.mcap)}</div></div>
+        <div><div class="stat-lbl">Direction</div><div class="stat-val" style="color:${s.change>=0?'var(--green)':'var(--red)'}; font-weight: 700">${s.change>=0?'▲ UP':'▼ DOWN'}</div></div>
+      </div>
+    </div>
+  `).join('');
+  $('detail-grid').querySelectorAll('.detail-card').forEach(c => {
+    c.addEventListener('click', () => openModal(STOCKS.find(s => s.symbol === c.dataset.sym)));
+  });
+
+  let pgHtml = `<button class="page-btn" id="pg-prev" ${detailPage === 0 ? 'disabled' : ''}>◀ Prev</button>`;
+  for (let i = 0; i < totalPages; i++) {
+    pgHtml += `<button class="page-btn ${i === detailPage ? 'active' : ''}" data-pg="${i}">${i+1}</button>`;
+  }
+  pgHtml += `<button class="page-btn" id="pg-next" ${detailPage === totalPages - 1 ? 'disabled' : ''}>Next ▶</button>`;
+  $('detail-pagination').innerHTML = pgHtml;
+  $('pg-prev').addEventListener('click', () => { if (detailPage > 0) { detailPage--; renderDetailCards(); window.scrollTo({top:0,behavior:'smooth'}); } });
+  $('pg-next').addEventListener('click', () => { if (detailPage < totalPages-1) { detailPage++; renderDetailCards(); window.scrollTo({top:0,behavior:'smooth'}); } });
+  document.querySelectorAll('.page-btn[data-pg]').forEach(b => {
+    b.addEventListener('click', () => { detailPage = parseInt(b.dataset.pg); renderDetailCards(); window.scrollTo({top:0,behavior:'smooth'}); });
+  });
+}
+document.querySelectorAll('.chip[data-detsort]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-detsort]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    detailSort = b.dataset.detsort;
+    detailPage = 0;
+    renderDetailCards();
+  });
+});
+document.querySelectorAll('.chip[data-detsector]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-detsector]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    detailSector = b.dataset.detsector;
+    detailPage = 0;
+    renderDetailCards();
+  });
+});
+
+/* ===== MODAL ===== */
+function openModal(s) {
+  const totalCap = STOCKS.reduce((sum,x)=>sum+x.mcap, 0);
+  const rankM = [...STOCKS].sort((a,b)=>b.mcap-a.mcap).findIndex(x=>x.symbol===s.symbol) + 1;
+  const rankC = [...STOCKS].sort((a,b)=>b.change-a.change).findIndex(x=>x.symbol===s.symbol) + 1;
+  const pct = (s.mcap/totalCap*100).toFixed(3);
+  const peers = STOCKS.filter(x => x.sector === s.sector).length;
+  const cap = s.mcap >= 100000 ? 'MEGA' : s.mcap >= 10000 ? 'LARGE' : s.mcap >= 1000 ? 'MID' : 'SMALL';
+  const capColor = s.mcap >= 100000 ? 'var(--amber)' : s.mcap >= 10000 ? 'var(--cyan)' : s.mcap >= 1000 ? 'var(--green)' : 'var(--purple)';
+  
+  $('modal-body').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div style="font-size: 10px; color: var(--text-2); letter-spacing: 0.3em;">INSTRUMENT PROFILE</div>
+    <div style="font-size: 48px; font-weight: 800; color: var(--amber); line-height: 1; margin: 6px 0; letter-spacing: -0.02em;">${s.symbol}</div>
+    <div style="color: var(--text-1); margin-bottom: 14px; font-size: 14px;">${s.name}</div>
+    <span class="sector-badge" style="background: ${SECTOR[s.sector].color}22; color: ${SECTOR[s.sector].color}; border: 1px solid ${SECTOR[s.sector].color};">${SECTOR[s.sector].name}</span>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px;">
+      <div style="padding: 14px; background: var(--bg-2); border-left: 3px solid var(--amber);">
+        <div style="font-size: 9px; color: var(--text-2); letter-spacing: 0.2em;">CURRENT PRICE</div>
+        <div style="font-size: 30px; font-weight: 800; margin-top: 4px; letter-spacing: -0.02em;">${fmtPrice(s.price)}</div>
+      </div>
+      <div style="padding: 14px; background: var(--bg-2); border-left: 3px solid ${s.change>=0?'var(--green)':'var(--red)'};">
+        <div style="font-size: 9px; color: var(--text-2); letter-spacing: 0.2em;">DAY CHANGE</div>
+        <div style="font-size: 30px; font-weight: 800; margin-top: 4px; color: ${s.change>=0?'var(--green)':'var(--red)'}; letter-spacing: -0.02em;">${fmtPct(s.change)}</div>
+      </div>
+    </div>
+    <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+      <div style="padding: 10px; border: 1px solid var(--border);">
+        <div style="font-size: 9px; color: var(--text-2); letter-spacing: 0.2em;">MARKET CAP</div>
+        <div style="margin-top: 4px; font-size: 16px; color: var(--amber); font-weight: 700">${fmtMcap(s.mcap)}</div>
+      </div>
+      <div style="padding: 10px; border: 1px solid var(--border);">
+        <div style="font-size: 9px; color: var(--text-2); letter-spacing: 0.2em;">CAP CATEGORY</div>
+        <div style="margin-top: 4px; font-size: 16px; color: ${capColor}; font-weight: 700">${cap}-CAP</div>
+      </div>
+      <div style="padding: 10px; border: 1px solid var(--border);">
+        <div style="font-size: 9px; color: var(--text-2); letter-spacing: 0.2em;">RANK BY MCAP</div>
+        <div style="margin-top: 4px; font-size: 16px;">#${rankM} / 286</div>
+      </div>
+      <div style="padding: 10px; border: 1px solid var(--border);">
+        <div style="font-size: 9px; color: var(--text-2); letter-spacing: 0.2em;">RANK BY CHANGE</div>
+        <div style="margin-top: 4px; font-size: 16px;">#${rankC} / 286</div>
+      </div>
+      <div style="padding: 10px; border: 1px solid var(--border);">
+        <div style="font-size: 9px; color: var(--text-2); letter-spacing: 0.2em;">% OF UNIVERSE</div>
+        <div style="margin-top: 4px; font-size: 16px;">${pct}%</div>
+      </div>
+      <div style="padding: 10px; border: 1px solid var(--border);">
+        <div style="font-size: 9px; color: var(--text-2); letter-spacing: 0.2em;">SECTOR PEERS</div>
+        <div style="margin-top: 4px; font-size: 16px;">${peers}</div>
+      </div>
+    </div>
+    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text-2); letter-spacing: 0.15em;">
+      ★ DATA: ROBINHOOD ENERGY LIST SNAPSHOT
+    </div>
+  `;
+  $('modal').classList.add('show');
+}
+function closeModal() { $('modal').classList.remove('show'); }
+$('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ===== NAV ===== */
+const renderedPages = {};
+document.querySelectorAll('.nav-tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    $('page-' + t.dataset.page).classList.add('active');
+    
+    if (t.dataset.page === 'overview' && !renderedPages.overview) {
+      setTimeout(() => { renderTreemap(); renderedPages.overview = true; }, 30);
+    }
+    if (t.dataset.page === 'charts' && !renderedPages.charts) {
+      setTimeout(() => { renderCharts(); renderedPages.charts = true; }, 30);
+    }
+    if (t.dataset.page === 'sectors' && !renderedPages.sectors) {
+      setTimeout(() => { renderDonut(); renderedPages.sectors = true; }, 30);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+/* ===== INIT ===== */
+renderMetrics();
+renderTreemapLegend();
+renderOverviewLists();
+renderTable();
+renderSectorBars();
+renderSectorCards();
+renderRankings();
+renderDetailCards();
+setTimeout(() => { renderTreemap(); renderedPages.overview = true; }, 100);
+window.addEventListener('resize', () => { 
+  if (renderedPages.overview) renderTreemap();
+});
+</script>
+
+</body>
+</html>
