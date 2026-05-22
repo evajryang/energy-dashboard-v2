@@ -1,9 +1,1 @@
-{
-  "name": "energy-dashboard-v2",
-  "version": "1.0.0",
-  "description": "Energy sector real-time dashboard",
-  "type": "module",
-  "dependencies": {
-    "yahoo-finance2": "^2.11.3"
-  }
-}
+{"name":"energy-dashboard-v2","version":"1.0.1","type":"module"}
